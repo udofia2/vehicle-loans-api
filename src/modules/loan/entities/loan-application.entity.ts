@@ -40,6 +40,42 @@ export class LoanApplication {
   valuationId: string;
 
   @ApiProperty({
+    description: 'Applicant full name',
+    example: 'John Doe',
+  })
+  @Column({ type: 'varchar', length: 100 })
+  applicantName: string;
+
+  @ApiProperty({
+    description: 'Applicant email address',
+    example: 'john.doe@example.com',
+  })
+  @Column({ type: 'varchar', length: 255 })
+  applicantEmail: string;
+
+  @ApiProperty({
+    description: 'Applicant phone number',
+    example: '+234801234567',
+  })
+  @Column({ type: 'varchar', length: 20 })
+  applicantPhone: string;
+
+  @ApiProperty({
+    description: 'Monthly income in currency',
+    example: 500000,
+  })
+  @Column({ type: 'decimal', precision: 12, scale: 2 })
+  monthlyIncome: number;
+
+  @ApiProperty({
+    description: 'Employment status',
+    enum: ['EMPLOYED', 'SELF_EMPLOYED', 'UNEMPLOYED', 'RETIRED'],
+    example: 'EMPLOYED',
+  })
+  @Column({ type: 'varchar', length: 50 })
+  employmentStatus: string;
+
+  @ApiProperty({
     description: 'Requested loan amount',
     example: 20000.0,
   })

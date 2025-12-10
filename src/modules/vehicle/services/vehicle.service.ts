@@ -87,6 +87,35 @@ export class VehicleService {
     return await this.vehicleRepository.create(enrichedData);
   }
 
+  /**
+   * Create vehicle manually without VIN lookup
+   */
+  async createVehicleManually(
+    createVehicleDto: CreateVehicleDto,
+  ): Promise<Vehicle> {
+    const vinValidation = VinValidatorUtil.validateVin(createVehicleDto.vin);
+    if (!vinValidation.isValid) {
+      throw new ConflictException(
+        `Invalid VIN format: ${vinValidation.reason}`,
+      );
+    }
+
+    // Check if vehicle with this VIN already exists
+    const existingVehicle = await this.vehicleRepository.findByVin(
+      createVehicleDto.vin,
+    );
+    if (existingVehicle) {
+      throw new ConflictException('Vehicle with this VIN already exists');
+    }
+
+    this.logger.log(
+      `Creating vehicle manually for VIN: ${createVehicleDto.vin}`,
+    );
+
+    // Create vehicle directly from provided data without VIN lookup
+    return await this.vehicleRepository.create(createVehicleDto);
+  }
+
   private logVinDiscrepancies(
     providedData: CreateVehicleDto,
     vinData: any,

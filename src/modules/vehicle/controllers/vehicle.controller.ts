@@ -36,18 +36,58 @@ export class VehicleController {
   constructor(private readonly vehicleService: VehicleService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create a new vehicle' })
+  @ApiOperation({
+    summary: 'Create a new vehicle with VIN lookup',
+    description:
+      'Creates a vehicle by performing VIN lookup to enrich data. Falls back to manual data if VIN lookup fails.',
+  })
   @ApiResponse({
     status: 201,
     description: 'Vehicle created successfully',
     type: Vehicle,
   })
   @ApiBadRequestResponse({ description: 'Invalid input data' })
+  @ApiResponse({
+    status: 409,
+    description: 'Vehicle with this VIN already exists',
+  })
+  @ApiResponse({
+    status: 502,
+    description: 'External VIN lookup service unavailable',
+  })
   async createVehicle(
     @Body() createVehicleDto: CreateVehicleDto,
   ): Promise<ApiResponseDto<Vehicle>> {
     const vehicle = await this.vehicleService.createVehicle(createVehicleDto);
     return new ApiResponseDto(true, vehicle, 'Vehicle created successfully');
+  }
+
+  @Post('manual')
+  @ApiOperation({
+    summary: 'Create a new vehicle manually',
+    description:
+      'Creates a vehicle using only the provided data without performing VIN lookup.',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Vehicle created successfully',
+    type: Vehicle,
+  })
+  @ApiBadRequestResponse({ description: 'Invalid input data' })
+  @ApiResponse({
+    status: 409,
+    description: 'Vehicle with this VIN already exists',
+  })
+  async createVehicleManually(
+    @Body() createVehicleDto: CreateVehicleDto,
+  ): Promise<ApiResponseDto<Vehicle>> {
+    const vehicle =
+      await this.vehicleService.createVehicleManually(createVehicleDto);
+    return new ApiResponseDto(
+      true,
+      vehicle,
+      'Vehicle created manually successfully',
+    );
   }
 
   @Get()

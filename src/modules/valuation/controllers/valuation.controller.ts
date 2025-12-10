@@ -35,13 +35,25 @@ export class ValuationController {
   constructor(private readonly valuationService: ValuationService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create a new valuation manually' })
+  @ApiOperation({
+    summary: 'Request valuation for a vehicle',
+    description:
+      'Creates a valuation request and fetches current market value from external API',
+  })
   @ApiResponse({
     status: 201,
     description: 'Valuation created successfully',
     type: Valuation,
   })
   @ApiBadRequestResponse({ description: 'Invalid input data' })
+  @ApiResponse({
+    status: 404,
+    description: 'Referenced vehicle not found',
+  })
+  @ApiResponse({
+    status: 502,
+    description: 'External valuation API service unavailable',
+  })
   async createValuation(
     @Body() createValuationDto: CreateValuationDto,
   ): Promise<ApiResponseDto<Valuation>> {

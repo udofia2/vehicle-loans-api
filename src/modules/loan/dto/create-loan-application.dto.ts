@@ -5,6 +5,7 @@ import {
   IsEnum,
   IsOptional,
   IsUUID,
+  IsEmail,
   Min,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
@@ -28,8 +29,54 @@ export class CreateLoanApplicationDto {
   valuationId: string;
 
   @ApiProperty({
+    description: 'Applicant full name',
+    example: 'John Doe',
+    minLength: 2,
+    maxLength: 100,
+  })
+  @IsNotEmpty()
+  @IsString()
+  applicantName: string;
+
+  @ApiProperty({
+    description: 'Applicant email address',
+    example: 'john.doe@example.com',
+  })
+  @IsNotEmpty()
+  @IsEmail()
+  applicantEmail: string;
+
+  @ApiProperty({
+    description: 'Applicant phone number',
+    example: '+234801234567',
+  })
+  @IsNotEmpty()
+  @IsString()
+  applicantPhone: string;
+
+  @ApiProperty({
+    description: 'Monthly income in currency',
+    example: 500000,
+    minimum: 1,
+  })
+  @IsNotEmpty()
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(1)
+  monthlyIncome: number;
+
+  @ApiProperty({
+    description: 'Employment status',
+    enum: ['EMPLOYED', 'SELF_EMPLOYED', 'UNEMPLOYED', 'RETIRED'],
+    example: 'EMPLOYED',
+  })
+  @IsNotEmpty()
+  @IsString()
+  @IsEnum(['EMPLOYED', 'SELF_EMPLOYED', 'UNEMPLOYED', 'RETIRED'])
+  employmentStatus: string;
+
+  @ApiProperty({
     description: 'Requested loan amount',
-    example: 20000.00,
+    example: 20000.0,
     minimum: 1000,
   })
   @IsNotEmpty()

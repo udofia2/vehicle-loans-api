@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Offer } from './entities/offer.entity';
 import { OfferController } from './controllers/offer.controller';
 import { OfferService } from './services/offer.service';
+import { OfferCalculationService } from './services/offer-calculation.service';
 import { TypeOrmOfferRepository } from './repositories/offer.repository';
 import { LoanModule } from '../loan/loan.module';
 
@@ -12,7 +13,7 @@ import { LoanModule } from '../loan/loan.module';
     LoanModule, // Import to access LoanApplicationService
   ],
   controllers: [OfferController],
-  providers: [OfferService, TypeOrmOfferRepository],
-  exports: [OfferService, TypeOrmOfferRepository],
+  providers: [OfferService, OfferCalculationService, TypeOrmOfferRepository],
+  exports: [OfferService, OfferCalculationService, TypeOrmOfferRepository],
 })
 export class OfferModule {}

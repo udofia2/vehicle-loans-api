@@ -1,6 +1,9 @@
 import { Global, Module, ValidationPipe } from '@nestjs/common';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 
+// Controllers
+import { HealthController } from './controllers/health.controller';
+
 // Services
 import { LoggerService } from './services/logger.service';
 
@@ -14,6 +17,7 @@ import { TransformInterceptor } from './interceptors/transform.interceptor';
 
 @Global()
 @Module({
+  controllers: [HealthController],
   providers: [
     // Services
     LoggerService,
