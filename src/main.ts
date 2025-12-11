@@ -10,8 +10,23 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   // Enable CORS
+  const frontendUrl = configService.get(
+    'FRONTEND_URL',
+    'http://localhost:3003',
+  );
+  const allowedOrigins = [frontendUrl];
+
+  // In production, you might want to be more restrictive
+  if (configService.get('NODE_ENV') === 'development') {
+    allowedOrigins.push(
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://localhost:3002',
+    );
+  }
+
   app.enableCors({
-    origin: true,
+    origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
